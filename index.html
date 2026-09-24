@@ -36,6 +36,7 @@
     </ul>
   </div>
 </nav>
+<div class="menu-overlay" id="menuOverlay"></div>
 
 <!-- section awalan -->
 <section id="awal" class="awalan">
@@ -193,16 +194,20 @@
   // mobile menu toggle
   const burger = document.getElementById('burger');
   const menu = document.getElementById('menu');
-  burger.addEventListener('click', () => {
-    const isOpen = menu.classList.toggle('open');
-    burger.classList.toggle('open');
+  const overlay = document.getElementById('menuOverlay');
+
+  function setMenu(isOpen) {
+    menu.classList.toggle('open', isOpen);
+    burger.classList.toggle('open', isOpen);
+    overlay.classList.toggle('open', isOpen);
     burger.setAttribute('aria-expanded', isOpen);
-  });
-  menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
-    menu.classList.remove('open');
-    burger.classList.remove('open');
-    burger.setAttribute('aria-expanded', false);
-  }));
+    document.body.style.overflow = isOpen ? 'hidden' : '';
+  }
+
+  burger.addEventListener('click', () => setMenu(!menu.classList.contains('open')));
+  overlay.addEventListener('click', () => setMenu(false));
+  menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => setMenu(false)));
+  window.addEventListener('keydown', (e) => { if (e.key === 'Escape') setMenu(false); });
 
   // navbar shrink on scroll
   const nav = document.querySelector('.navbar');
